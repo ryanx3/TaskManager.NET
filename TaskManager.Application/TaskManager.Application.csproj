@@ -10,4 +10,11 @@
     <ProjectReference Include="..\TaskManager.Communication\TaskManager.Communication.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="UseCases\Tasks\GetAll\" />
+    <Folder Include="UseCases\Tasks\GetById\" />
+    <Folder Include="UseCases\Tasks\DeleteById\" />
+    <Folder Include="UseCases\Tasks\UpdateById\" />
+  </ItemGroup>
+
 </Project>
