@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using TaskManager.Application.UseCases.Tasks.Create;
+using TaskManager.Application.UseCases.Tasks.DeleteById;
 using TaskManager.Application.UseCases.Tasks.GetAll;
 using TaskManager.Application.UseCases.Tasks.GetById;
 using TaskManager.Application.UseCases.Tasks.UpdateById;
@@ -23,19 +24,23 @@ public class TaskController : ControllerBase
 
     [HttpGet]
     [ProducesResponseType(typeof(ResponseAllTaskJson), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(ResponseErrorJson), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
     public IActionResult GetAll() {
         var response = new GetAllTaskUseCase().Execute();
-        return Ok(response);
+        if (response.Tasks.Count != 0)
+        {
+            return Ok(response);
+        }
+        return NoContent();
     }
 
     [HttpPut]
     [Route("{id}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
-    [ProducesResponseType(typeof(ResponseErrorJson), StatusCodes.Status404NotFound)]
-    public IActionResult Update([FromRoute] int id)
+    [ProducesResponseType(typeof(ResponseErrorJson), StatusCodes.Status400BadRequest)]
+    public IActionResult Update([FromRoute] int id, [FromBody] RequestTaskJson request)
     {
-        new UpdateTaskByIdUseCase().Execute(id);
+        new UpdateTaskByIdUseCase().Execute(id, request);
         return NoContent();
     }
 
@@ -47,5 +52,15 @@ public class TaskController : ControllerBase
     {
         var response = new GetTaskByIdUseCase().Execute(id);
         return Ok(response);
+    }
+
+    [HttpDelete]
+    [Route("{id}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(ResponseErrorJson), StatusCodes.Status404NotFound)]
+    public IActionResult Delete([FromRoute] int id)
+    {
+        new DeleteTaskByIdUseCase().Execute(id);
+        return NoContent();
     }
 }
