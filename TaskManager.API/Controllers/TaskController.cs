@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using TaskManager.Application.UseCases.Tasks.Create;
+using TaskManager.Application.UseCases.Tasks.GetAll;
 using TaskManager.Communication.Requests;
 using TaskManager.Communication.Responses;
 
@@ -17,5 +18,16 @@ public class TaskController : ControllerBase
         var response = new CreateTaskUseCase().Execute(request);
         return Created(string.Empty, response);
     }
+
+    [HttpGet()]
+    [ProducesResponseType(typeof(ResponseAllTaskJson), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ResponseErrorJson), StatusCodes.Status404NotFound)]
+    public IActionResult GetAll() {
+        var response = new GetAllTaskUseCase().Execute();
+        return Ok(response);
+    }
+    
+
+
 
 }
