@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using TaskManager.Application.UseCases.Tasks.Create;
 using TaskManager.Application.UseCases.Tasks.GetAll;
+using TaskManager.Application.UseCases.Tasks.GetById;
 using TaskManager.Communication.Requests;
 using TaskManager.Communication.Responses;
 
@@ -19,14 +20,23 @@ public class TaskController : ControllerBase
         return Created(string.Empty, response);
     }
 
-    [HttpGet()]
+    [HttpGet]
     [ProducesResponseType(typeof(ResponseAllTaskJson), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ResponseErrorJson), StatusCodes.Status404NotFound)]
     public IActionResult GetAll() {
         var response = new GetAllTaskUseCase().Execute();
         return Ok(response);
     }
-    
+
+    [HttpGet]
+    [Route("{id}")]
+    [ProducesResponseType(typeof(ResponseTaskJson), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ResponseErrorJson), StatusCodes.Status404NotFound)]
+    public IActionResult GetById([FromRoute] int id)
+    {
+        var response = new GetTaskByIdUseCase().Execute(id);
+        return Ok(response);
+    }
 
 
 
