@@ -2,6 +2,7 @@
 using TaskManager.Application.UseCases.Tasks.Create;
 using TaskManager.Application.UseCases.Tasks.GetAll;
 using TaskManager.Application.UseCases.Tasks.GetById;
+using TaskManager.Application.UseCases.Tasks.UpdateById;
 using TaskManager.Communication.Requests;
 using TaskManager.Communication.Responses;
 
@@ -28,6 +29,16 @@ public class TaskController : ControllerBase
         return Ok(response);
     }
 
+    [HttpPut]
+    [Route("{id}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(ResponseErrorJson), StatusCodes.Status404NotFound)]
+    public IActionResult Update([FromRoute] int id)
+    {
+        new UpdateTaskByIdUseCase().Execute(id);
+        return NoContent();
+    }
+
     [HttpGet]
     [Route("{id}")]
     [ProducesResponseType(typeof(ResponseTaskJson), StatusCodes.Status200OK)]
@@ -37,7 +48,4 @@ public class TaskController : ControllerBase
         var response = new GetTaskByIdUseCase().Execute(id);
         return Ok(response);
     }
-
-
-
 }
